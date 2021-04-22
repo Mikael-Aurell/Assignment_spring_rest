@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Data
@@ -15,10 +16,10 @@ public class Book {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "tinyint(1) default 1")
     private boolean available;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "tinyint(1) default 1")
     private boolean reserved;
 
     @Column(nullable = false)
