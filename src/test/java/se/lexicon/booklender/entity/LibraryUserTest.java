@@ -46,4 +46,5 @@ public class LibraryUserTest {
         actual.setEmail("aurell.mikael@gmail.com");
         Assertions.assertEquals(actual.hashCode(),testObject.hashCode());
     }
+
 }

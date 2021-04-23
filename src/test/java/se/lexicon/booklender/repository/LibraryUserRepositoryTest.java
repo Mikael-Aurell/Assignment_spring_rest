@@ -1,6 +1,7 @@
 package se.lexicon.booklender.repository;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,13 +32,13 @@ class LibraryUserRepositoryTest {
 
         libraryUser = new LibraryUser();
         libraryUser.setRegDate(LocalDate.now());
-        libraryUser.setName("Test User 1");
-        libraryUser.setEmail("test1@test.se");
+        libraryUser.setName("Mikael Aurell");
+        libraryUser.setEmail("aurell.mikael@gmail.com");
 
         libraryUser2 = new LibraryUser();
         libraryUser2.setRegDate(LocalDate.now());
-        libraryUser2.setName("Test User 2");
-        libraryUser2.setEmail("test2@test.se");
+        libraryUser2.setName("Mikael Aurell2");
+        libraryUser2.setEmail("aurell.mikael2@gmail.com");
 
         libraryUserRepository.save(libraryUser);
         libraryUserRepository.save(libraryUser2);
@@ -50,7 +51,7 @@ class LibraryUserRepositoryTest {
         Integer expectedId = userList.get(1).getUserId();
         Optional<LibraryUser> actualId = libraryUserRepository.findById(expectedId);
 
-        assertEquals("Test User 2", actualId.get().getName());
+        assertEquals("Mikael Aurell2", actualId.get().getName());
     }
 
     @Test
@@ -72,5 +73,11 @@ class LibraryUserRepositoryTest {
         assertEquals(emptyList, userList);
     }
 
+    @Test
+    @DisplayName("Test Find By Email")
+    public void test_find_by_email(){
+        LibraryUser actual = libraryUserRepository.findLibraryUserByEmailIgnoreCase("aurell.mikael@gmail.com");
+        assertEquals("Mikael Aurell", actual.getName());
+    }
 
 }
