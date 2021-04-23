@@ -8,6 +8,7 @@ import se.lexicon.booklender.entity.Book;
 import se.lexicon.booklender.entity.LibraryUser;
 import se.lexicon.booklender.entity.Loan;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,27 +19,56 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class LoanRepositoryTest {
 
-    Book book;
-    LibraryUser user;
+    Book testBook;
+    LibraryUser testLibraryUser;
     Loan testObject;
-    LoanRepository loanRepository;
+
+    LoanRepository          loanRepository;
+    BookRepository          bookRepository;
+    LibraryUserRepository   libraryUserRepository;
 
     @Autowired
     public void setLoanRepository(LoanRepository loanRepository) {
         this.loanRepository = loanRepository;
     }
 
+    @Autowired
+    public void setBookRepository(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    @Autowired
+    public void setLibraryUserRepository(LibraryUserRepository libraryUserRepository) {
+        this.libraryUserRepository = libraryUserRepository;
+    }
+
     @BeforeEach
     void setUp() {
 
+        testBook = new Book();
+        testBook.setTitle("How to Become a senor Java Fullstack Developer");
+        testBook.setAvailable(true);
+        testBook.setReserved(false);
+        testBook.setMaxLoanDays(30);
+        testBook.setFinePerDay(BigDecimal.valueOf(1 / 8));
+        testBook.setDescription("Java");
+
+        bookRepository.save(testBook);
+
+        testLibraryUser = new LibraryUser();
+        testLibraryUser.setRegDate(LocalDate.of(1978, 04, 30));
+        testLibraryUser.setName("Mikael Aurell");
+        testLibraryUser.setEmail("aurell.mikael@gmail.com");
+
+        libraryUserRepository.save(testLibraryUser);
+
         testObject = new Loan();
-        testObject.setLoanTaker(user);
-        testObject.setBook(book);
+        testObject.setBook(testBook);
+        testObject.setLoanTaker(testLibraryUser);
         testObject.setTerminated(true);
-        testObject.setLoanDate(LocalDate.of(1978,04,30));
+        testObject.setLoanDate(LocalDate.of(2021,04,22));
 
         loanRepository.save(testObject);
-
     }
 
     @Test
@@ -48,7 +78,7 @@ class LoanRepositoryTest {
         Long expectedId = loanList.get(0).getLoanId();
         Optional<Loan> actualId = loanRepository.findById(expectedId);
 
-        assertEquals(user, actualId.get().getLoanTaker());
+        assertEquals(testLibraryUser.getName(), actualId.get().getLoanTaker().getName());
     }
 
     @Test
@@ -67,5 +97,20 @@ class LoanRepositoryTest {
         loanRepository.findAll().iterator().forEachRemaining(loanList::add);
 
         assertEquals(emptyList, loanList);
+    }
+
+    @Test
+    public void test_find_loan_by_userId(){
+        assertEquals("Mikael Aurell",loanRepository.findLoansByLoanTaker_UserId(1).get(0).getLoanTaker().getName());
+    }
+
+    @Test
+    public void test_find_loan_by_bookId(){
+        assertEquals("Java", loanRepository.findLoansByBook_BookId(1).get(0).getBook().getDescription());
+    }
+
+    @Test
+    public void test_find_loan_by_terminated(){
+        assertEquals(1, loanRepository.findLoansByTerminated(true).size());
     }
 }

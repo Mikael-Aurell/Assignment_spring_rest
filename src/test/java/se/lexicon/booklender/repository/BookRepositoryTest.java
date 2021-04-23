@@ -98,5 +98,4 @@ public class BookRepositoryTest {
         assertEquals("C#", bookRepository
                 .findBooksByTitle("How to Become a senor Fullstack Developer").get(1).getDescription());
     }
-
 }
