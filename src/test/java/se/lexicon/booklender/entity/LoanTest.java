@@ -14,9 +14,9 @@ import java.util.List;
 @SpringBootTest
 public class LoanTest {
 
+    Loan testObject;
     Book testBook;
     LibraryUser testLoanTaker;
-    Loan testObject;
 
     @BeforeEach
     public void setup() {

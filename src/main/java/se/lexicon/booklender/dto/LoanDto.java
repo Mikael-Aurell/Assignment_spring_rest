@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Data
 public class LoanDto {
     private long loanId;
-    private LibraryUser loanTaker;
-    private Book book;
+    private LibraryUserDto loanTakerDto;
+    private BookDto bookDto;
     private LocalDate loanDate;
     private boolean terminated;
 }
