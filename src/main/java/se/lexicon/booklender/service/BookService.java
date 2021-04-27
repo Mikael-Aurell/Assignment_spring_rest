@@ -9,7 +9,6 @@ import java.util.List;
 public interface BookService {
 
     BookDto findById(int bookId) throws DataNotFoundException;
-
     BookDto create(BookDto dto);
     BookDto update(BookDto dto) throws DataNotFoundException;
 

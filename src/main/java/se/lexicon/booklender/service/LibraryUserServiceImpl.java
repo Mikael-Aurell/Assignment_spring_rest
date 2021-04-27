@@ -60,11 +60,6 @@ public class LibraryUserServiceImpl implements LibraryUserService{
         return modelMapper.map(libraryUserRepository.save(modelMapper.map(libraryUserRepository.findById(dto.getUserId())
                         .orElseThrow(()-> new DataNotFoundException("The LibraryUserDto is not found.")), LibraryUser.class)),
                 LibraryUserDto.class);
-
-        //Optional<LibraryUser> libraryUserFindData = libraryUserRepository.findById(dto.getUserId());
-        //if (libraryUserRepository.findById(dto.getUserId()).isPresent()){
-        //}
-        //} else throw new DataNotFoundException("The LibraryUserDto is not found.");
     }
 
     @Override
@@ -76,7 +71,7 @@ public class LibraryUserServiceImpl implements LibraryUserService{
     }
 
     @Override
-    public void delete(int userId) throws DataNotFoundException {
+    public void delete(int userId) throws DataNotFoundException { //changed delete return void as repository
         if (userId == 0) throw new IllegalArgumentException("Id should not be empty.");
         Optional<LibraryUser> libraryUserOptional = libraryUserRepository.findById(userId);
         if (libraryUserOptional.isPresent()) {
