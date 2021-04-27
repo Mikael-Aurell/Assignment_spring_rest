@@ -46,7 +46,7 @@ public class LibraryUserServiceImpl implements LibraryUserService{
 
     @Override
     public LibraryUserDto create(LibraryUserDto dto) {
-        if (dto == null) throw new IllegalArgumentException("The dto object not found");
+        if (dto == null) throw new IllegalArgumentException("The LibraryUserDto object not found");
         if (dto.getUserId() < 1) throw new IllegalArgumentException("The LibraryUserDto should be empty");
 
         return modelMapper.map(libraryUserRepository.save(modelMapper.map(dto, LibraryUser.class)),LibraryUserDto.class);
@@ -55,7 +55,7 @@ public class LibraryUserServiceImpl implements LibraryUserService{
     @Override
     public LibraryUserDto update(LibraryUserDto dto) throws DataNotFoundException {
         if (dto == null) throw new IllegalArgumentException("The dto object not found");
-        if (dto.getUserId() < 1) throw new IllegalArgumentException("The LibraryUserDto should be empty");
+        if (dto.getUserId() < 1) throw new IllegalArgumentException("The LibraryUserDto is not valid");
 
         return modelMapper.map(libraryUserRepository.save(modelMapper.map(libraryUserRepository.findById(dto.getUserId())
                         .orElseThrow(()-> new DataNotFoundException("The LibraryUserDto is not found.")), LibraryUser.class)),
@@ -76,15 +76,14 @@ public class LibraryUserServiceImpl implements LibraryUserService{
     }
 
     @Override
-    public boolean delete(int userId) throws DataNotFoundException {
+    public void delete(int userId) throws DataNotFoundException {
         if (userId == 0) throw new IllegalArgumentException("Id should not be empty.");
         Optional<LibraryUser> libraryUserOptional = libraryUserRepository.findById(userId);
         if (libraryUserOptional.isPresent()) {
             libraryUserRepository.delete(modelMapper.map(libraryUserOptional, LibraryUser.class));
-            return true;
         }
         else {
-            throw new DataNotFoundException("The Id have no match in the database.");
+            throw new DataNotFoundException("Id ");
         }
     }
 }
