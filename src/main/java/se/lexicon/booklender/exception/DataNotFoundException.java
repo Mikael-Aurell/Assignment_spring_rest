@@ -11,7 +11,8 @@ public class DataNotFoundException extends Exception {
 
     @Override
     public String getMessage(){
-        message = "is not found.";
+
+        message = message + " is not found.";
         return message;
     }
 }

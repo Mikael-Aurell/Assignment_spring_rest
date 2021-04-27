@@ -1,5 +1,6 @@
 package se.lexicon.booklender.service;
 
+import org.hibernate.query.Query;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import se.lexicon.booklender.repository.BookRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,8 +42,9 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public BookDto create(BookDto dto) {
+
         if(dto == null) throw new IllegalArgumentException("BookDto not found");
-        if(dto.getBookId() <1) throw new IllegalArgumentException("Id should be empty");
+        if(dto.getBookId() != 0) throw new IllegalArgumentException("Id should be zero.");
 
         return modelMapper.map(bookRepository.save(modelMapper.map(dto, Book.class)),BookDto.class);
     }
@@ -51,17 +54,26 @@ public class BookServiceImpl implements BookService{
         if (dto == null) throw new IllegalArgumentException("The dto object not found");
         if (dto.getBookId() < 1) throw new IllegalArgumentException("The BookDto is not valid");
 
-        return modelMapper.map(bookRepository.save(bookRepository.findById(modelMapper.map(dto,Book.class).getBookId())
-                .orElseThrow(()-> new DataNotFoundException("BookDto "))),BookDto.class);
+        Optional<Book> bookOptional = bookRepository.findById(modelMapper.map(dto,Book.class).getBookId());
+        if (bookOptional.isPresent()){
+            return modelMapper.map(bookRepository.save(modelMapper.map(dto,Book.class)),BookDto.class);
+        }
+        else throw new DataNotFoundException("BookDto");
+
+        //bookRepository.findById(dto.getBookId()).orElseThrow(()-> new DataNotFoundException("The LibraryUserDto is not found."));
+        /*return modelMapper.map(bookRepository.save(modelMapper.map(dto, Book.class)), BookDto.class);*/
     }
 
 
     @Override
     public List<BookDto> findAll() {
         List<Book> bookList = new ArrayList<>();
+
         bookRepository.findAll().iterator().forEachRemaining(bookList::add);
 
-        return bookList.stream().map(book -> modelMapper.map(book,BookDto.class)).collect(Collectors.toList());
+        return bookList.stream()
+                .map(book -> modelMapper.map(book,BookDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override

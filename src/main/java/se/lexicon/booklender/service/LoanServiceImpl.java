@@ -56,7 +56,7 @@ public class LoanServiceImpl implements LoanService{
     @Override
     public LoanDto create(LoanDto dto) {
         if(dto == null) throw new IllegalArgumentException("BookDto not found");
-        if(dto.getLoanId() <1) throw new IllegalArgumentException("Id should be empty");
+        if(dto.getLoanId() != 0) throw new IllegalArgumentException("Id should be empty");
 
         return modelMapper.map(loanRepository.save(modelMapper.map(dto, Loan.class)),LoanDto.class);
     }

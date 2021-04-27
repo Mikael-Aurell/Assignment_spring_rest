@@ -47,7 +47,7 @@ public class LibraryUserServiceImpl implements LibraryUserService{
     @Override
     public LibraryUserDto create(LibraryUserDto dto) {
         if (dto == null) throw new IllegalArgumentException("The LibraryUserDto object not found");
-        if (dto.getUserId() < 1) throw new IllegalArgumentException("The LibraryUserDto should be empty");
+        if (dto.getUserId() != 0) throw new IllegalArgumentException("The LibraryUserDto should be empty");
 
         return modelMapper.map(libraryUserRepository.save(modelMapper.map(dto, LibraryUser.class)),LibraryUserDto.class);
     }
