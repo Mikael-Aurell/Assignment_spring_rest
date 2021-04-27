@@ -64,11 +64,17 @@ public class BookServiceImpl implements BookService{
         /*return modelMapper.map(bookRepository.save(modelMapper.map(dto, Book.class)), BookDto.class);*/
     }
 
+    @Override
+    public void delete(int bookId) throws DataNotFoundException { //changed delete return void as repository
+        if (bookId <1)throw new IllegalArgumentException("The id is not valid");
+
+        bookRepository.delete(modelMapper.map(bookRepository.findById(bookId)
+                .orElseThrow(()->new DataNotFoundException("Id ")),Book.class));
+    }
 
     @Override
     public List<BookDto> findAll() {
         List<Book> bookList = new ArrayList<>();
-
         bookRepository.findAll().iterator().forEachRemaining(bookList::add);
 
         return bookList.stream()
@@ -94,13 +100,5 @@ public class BookServiceImpl implements BookService{
     public List<BookDto> findByAvailable(boolean available) {
         return bookRepository.findBooksByAvailable(available)
                 .stream().map(book -> modelMapper.map(book, BookDto.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public void delete(int bookId) throws DataNotFoundException { //changed delete return void as repository
-        if (bookId <1)throw new IllegalArgumentException("The id is not valid");
-
-        bookRepository.delete(modelMapper.map(bookRepository.findById(bookId)
-                .orElseThrow(()->new DataNotFoundException("Id ")),Book.class));
     }
 }

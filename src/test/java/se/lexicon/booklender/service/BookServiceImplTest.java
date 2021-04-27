@@ -42,6 +42,17 @@ public class BookServiceImplTest {
 
         testObject.create(testBookDto);
     }
+
+    @Test
+    @DisplayName("Find by Id")
+    public void test_find_by_id(){
+        try {
+            assertEquals(1,testObject.findById(testBookDto.getBookId()));
+        } catch (DataNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test
     @DisplayName("Test1 Create Book")
     public void test_create_book(){

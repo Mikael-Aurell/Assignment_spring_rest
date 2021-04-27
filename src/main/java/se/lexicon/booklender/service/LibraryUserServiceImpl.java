@@ -3,7 +3,9 @@ package se.lexicon.booklender.service;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.lexicon.booklender.dto.BookDto;
 import se.lexicon.booklender.dto.LibraryUserDto;
+import se.lexicon.booklender.entity.Book;
 import se.lexicon.booklender.entity.LibraryUser;
 import se.lexicon.booklender.exception.DataNotFoundException;
 import se.lexicon.booklender.repository.LibraryUserRepository;
@@ -37,6 +39,16 @@ public class LibraryUserServiceImpl implements LibraryUserService{
                 .orElseThrow(() -> new DataNotFoundException("LibraryUserDto not found.")), LibraryUserDto.class);
     }
 
+
+
+    @Override
+    public List<LibraryUserDto> findAll() {
+        List<LibraryUser> libraryUserList = new ArrayList<>();
+        libraryUserRepository.findAll().iterator().forEachRemaining(libraryUserList::add);
+        return libraryUserList.stream().map(libraryUser -> modelMapper.map(libraryUser,LibraryUserDto.class))
+                .collect(Collectors.toList());
+    }
+
     @Override
     public LibraryUserDto findByEmail(String email) {
         if (email == null) throw new IllegalArgumentException("Email should not be null");
@@ -57,28 +69,18 @@ public class LibraryUserServiceImpl implements LibraryUserService{
         if (dto == null) throw new IllegalArgumentException("The dto object not found");
         if (dto.getUserId() < 1) throw new IllegalArgumentException("The LibraryUserDto is not valid");
 
-        return modelMapper.map(libraryUserRepository.save(modelMapper.map(libraryUserRepository.findById(dto.getUserId())
-                        .orElseThrow(()-> new DataNotFoundException("The LibraryUserDto is not found.")), LibraryUser.class)),
-                LibraryUserDto.class);
-    }
-
-    @Override
-    public List<LibraryUserDto> findAll() {
-        List<LibraryUser> libraryUserList = new ArrayList<>();
-        libraryUserRepository.findAll().iterator().forEachRemaining(libraryUserList::add);
-        return libraryUserList.stream().map(libraryUser -> modelMapper.map(libraryUser,LibraryUserDto.class))
-                .collect(Collectors.toList());
+        Optional<LibraryUser> bookOptional = libraryUserRepository.findById(modelMapper.map(dto,LibraryUser.class).getUserId());
+        if (bookOptional.isPresent()){
+            return modelMapper.map(libraryUserRepository.save(modelMapper.map(dto,LibraryUser.class)), LibraryUserDto.class);
+        }
+        else throw new DataNotFoundException("LibraryUserDto");
     }
 
     @Override
     public void delete(int userId) throws DataNotFoundException { //changed delete return void as repository
-        if (userId == 0) throw new IllegalArgumentException("Id should not be empty.");
-        Optional<LibraryUser> libraryUserOptional = libraryUserRepository.findById(userId);
-        if (libraryUserOptional.isPresent()) {
-            libraryUserRepository.delete(modelMapper.map(libraryUserOptional, LibraryUser.class));
-        }
-        else {
-            throw new DataNotFoundException("Id ");
-        }
+        if (userId < 1)throw new IllegalArgumentException("The id is not valid");
+
+        libraryUserRepository.delete(modelMapper.map(libraryUserRepository.findById(userId)
+                .orElseThrow(()->new DataNotFoundException("Id ")), LibraryUser.class));
     }
 }
