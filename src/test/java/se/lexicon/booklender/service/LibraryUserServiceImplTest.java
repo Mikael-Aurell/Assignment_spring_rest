@@ -40,7 +40,7 @@ public class LibraryUserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test1: Find By Id ")
+    @DisplayName("Test_1: Find By Id ")
     public void test_find_by_id(){
         testObject.create(testLibraryUser2Dto);
         try {
@@ -51,16 +51,15 @@ public class LibraryUserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test2: Create LibraryUser")
+    @DisplayName("Test_2: Create LibraryUser")
     public void test_create_book(){
         assertEquals("Mikael2 Aurell",testObject.create(testLibraryUser2Dto).getName());
     }
 
     @Test
-    @DisplayName("Test3: Update LibraryUser")
+    @DisplayName("Test_3: Update LibraryUser")
     public void test_update_book() {
         testLibraryUser2Dto.setUserId(1);
-
         try {
             assertEquals("Mikael2 Aurell", testObject.update(testLibraryUser2Dto).getName());
         } catch (DataNotFoundException e) {
@@ -69,7 +68,7 @@ public class LibraryUserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test6: Delete")
+    @DisplayName("Test_4: Delete")
     public void test_delete(){
         testObject.create(testLibraryUser2Dto);
         assertEquals(2,testObject.findAll().size());
@@ -82,7 +81,7 @@ public class LibraryUserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test4: FindAll")
+    @DisplayName("Test_5: FindAll")
     public void test_findAll(){
         testObject.create(testLibraryUser2Dto);
         assertEquals("Mikael Aurell", testObject.findAll().get(0).getName());
@@ -90,7 +89,7 @@ public class LibraryUserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test5: Find By Email")
+    @DisplayName("Test_6: Find By Email")
     public void test_find_by_email(){
         assertEquals(testLibraryUserDto.getRegDate(),testObject.findByEmail("aurell.mikael@gmail.com").getRegDate());
     }

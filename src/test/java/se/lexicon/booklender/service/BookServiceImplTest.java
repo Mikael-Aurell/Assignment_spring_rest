@@ -44,7 +44,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    @DisplayName("Find by Id")
+    @DisplayName("Test_1: Find by Id")
     public void test_find_by_id(){
         try {
             assertEquals(1,testObject.findById(testBookDto.getBookId()));
@@ -54,13 +54,13 @@ public class BookServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test1 Create Book")
+    @DisplayName("Test_2: Create Book")
     public void test_create_book(){
         assertEquals("Java",testObject.create(testBookDto).getDescription());
     }
 
     @Test
-    @DisplayName("Test2 Update Book")
+    @DisplayName("Test_3: Update Book")
     public void test_update_book() {
         testBook2Dto.setBookId(1);
 
@@ -72,35 +72,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test 3 FindAll")
-    public void test_findAll(){
-        testObject.create(testBook2Dto);
-        assertEquals("Java", testObject.findAll().get(0).getDescription());
-        assertEquals("C#", testObject.findAll().get(1).getDescription());
-    }
-
-    @Test
-    @DisplayName("Test 4 Find By Title")
-    public void test_find_by_title(){
-        testObject.create(testBook2Dto);
-        assertEquals(2,testObject.findByTitle("How to Become a senor Java Fullstack Developer").size());
-    }
-
-    @Test
-    @DisplayName("Test 5 Find By Reserved")
-    public void test_find_by_reserved(){
-        assertEquals(testBookDto.getMaxLoanDays(),testObject.findByReserved(true).get(0).getMaxLoanDays());
-    }
-
-    @Test
-    @DisplayName("Test 6 Find By Available")
-    public void test_find_by_available(){
-        testObject.create(testBook2Dto);
-        assertEquals(testBook2Dto.getMaxLoanDays(),testObject.findByAvailable(true).get(0).getMaxLoanDays());
-    }
-
-    @Test
-    @DisplayName("Test 7 Delete")
+    @DisplayName("Test_4: Delete")
     public void test_delete(){
         testObject.create(testBook2Dto);
         assertEquals(2,testObject.findAll().size());
@@ -110,6 +82,34 @@ public class BookServiceImplTest {
             e.printStackTrace();
         }
         assertEquals(1, testObject.findAll().size());
+    }
+
+    @Test
+    @DisplayName("Test_5: FindAll")
+    public void test_findAll(){
+        testObject.create(testBook2Dto);
+        assertEquals("Java", testObject.findAll().get(0).getDescription());
+        assertEquals("C#", testObject.findAll().get(1).getDescription());
+    }
+
+    @Test
+    @DisplayName("Test_6: Find By Title")
+    public void test_find_by_title(){
+        testObject.create(testBook2Dto);
+        assertEquals(2,testObject.findByTitle("How to Become a senor Java Fullstack Developer").size());
+    }
+
+    @Test
+    @DisplayName("Test_7: Find By Reserved")
+    public void test_find_by_reserved(){
+        assertEquals(testBookDto.getMaxLoanDays(),testObject.findByReserved(true).get(0).getMaxLoanDays());
+    }
+
+    @Test
+    @DisplayName("Test_8: Find By Available")
+    public void test_find_by_available(){
+        testObject.create(testBook2Dto);
+        assertEquals(testBook2Dto.getMaxLoanDays(),testObject.findByAvailable(true).get(0).getMaxLoanDays());
     }
 }
 
