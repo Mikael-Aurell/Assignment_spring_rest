@@ -3,9 +3,9 @@ package se.lexicon.booklender.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import se.lexicon.booklender.dto.LibraryUserDto;
-import se.lexicon.booklender.entity.LibraryUser;
 import se.lexicon.booklender.exception.DataNotFoundException;
 import se.lexicon.booklender.service.LibraryUserService;
 
@@ -23,64 +23,60 @@ public class LibraryUserController {
         this.libraryUserService = libraryUserService;
     }
 
-    private ResponseEntity<LibraryUserDto> badRequest(){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
-
-    private ResponseEntity<LibraryUserDto> notFound(){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
     @GetMapping("/")
     public ResponseEntity<List<LibraryUserDto>> findAll(){
-        return ResponseEntity.ok(libraryUserService.findAll());
+        if (libraryUserService.findAll().isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        else
+        return ResponseEntity.status(HttpStatus.FOUND).body(libraryUserService.findAll());
     }
 
     @GetMapping("/{id}")
-        public ResponseEntity<LibraryUserDto> findById(@PathVariable("id")Integer id){
-        if(id < 1) return badRequest();
-        try {
-            return ResponseEntity.ok(libraryUserService.findById(id));
-        } catch (DataNotFoundException e) {
-            e.printStackTrace();
-            return notFound();
-        }
+        public ResponseEntity<LibraryUserDto> findById(@PathVariable("id")Integer userId){
+        if(userId == 0) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            try {
+                return ResponseEntity.status(HttpStatus.OK).body(libraryUserService.findById(userId));
+            } catch (DataNotFoundException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public ResponseEntity<LibraryUserDto> findByEmail(@PathVariable("email") String email){
-        if(email == null) return badRequest();
-        return ResponseEntity.ok(libraryUserService.findByEmail(email));
+        if(email.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.status(HttpStatus.OK).body(libraryUserService.findByEmail(email));
     }
 
-    @PostMapping
+    @Transactional
+    @PostMapping("/")
     public ResponseEntity<LibraryUserDto> save(@RequestBody LibraryUserDto dto){
         if(dto == null)
-            if (dto.getUserId() != 0) return badRequest();
+            if (dto.getUserId() != 0) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryUserService.create(dto));
     }
 
+    @Transactional
     @PutMapping("/")
     public ResponseEntity<LibraryUserDto> update(@RequestBody LibraryUserDto dto){
-        if(dto == null)
-            if (dto.getUserId() < 1) return badRequest();
+        if(dto != null)
+            if (dto.getUserId() < 1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         try {
             return ResponseEntity.status(HttpStatus.OK).body(libraryUserService.update(dto));
         } catch (DataNotFoundException e) {
             e.printStackTrace();
-            return notFound();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<LibraryUserDto> delete(@PathVariable("id")Integer id){
-        if (id < 1) return badRequest();
+        if (id < 1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         try {
             libraryUserService.delete(id); //delete returns void
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (DataNotFoundException e) {
             e.printStackTrace();
-            return notFound();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 

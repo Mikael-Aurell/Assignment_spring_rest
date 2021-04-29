@@ -12,7 +12,6 @@ import se.lexicon.booklender.repository.BookRepository;
 import se.lexicon.booklender.repository.LibraryUserRepository;
 import se.lexicon.booklender.repository.LoanRepository;
 
-import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -97,9 +96,9 @@ public class LoanServiceImpl implements LoanService{
                 .stream().map(book->modelMapper.map(book,LoanDto.class)).collect(Collectors.toList());
 
 
-        IntStream.range(0, loanDtoList.size()).forEach(y -> {
-            loanDtoList.get(y).setLoanTakerDto(modelMapper.map(loanList.get(y).getLoanTaker(), LibraryUserDto.class));
-            loanDtoList.get(y).setBookDto(modelMapper.map(loanList.get(y).getBook(), BookDto.class));
+        IntStream.range(0, loanDtoList.size()).forEach(z -> {
+            loanDtoList.get(z).setLoanTakerDto(modelMapper.map(loanList.get(z).getLoanTaker(), LibraryUserDto.class));
+            loanDtoList.get(z).setBookDto(modelMapper.map(loanList.get(z).getBook(), BookDto.class));
         });
 
         return loanDtoList;
@@ -107,7 +106,7 @@ public class LoanServiceImpl implements LoanService{
 
     @Override
     public List<LoanDto> findByUserId(int userId) {
-        if(userId <1 )throw new IllegalArgumentException("The field is empty");
+        if(userId <1 ) throw new IllegalArgumentException("The field is empty");
 
         List<Loan> loanList = new ArrayList<>();
         loanRepository.findLoansByBook_BookId(userId).iterator().forEachRemaining(loanList::add);
@@ -122,6 +121,7 @@ public class LoanServiceImpl implements LoanService{
         });
 
         return loanDtoList;
+
     }
 
     @Override

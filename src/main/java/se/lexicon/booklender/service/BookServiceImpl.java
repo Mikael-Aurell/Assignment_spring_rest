@@ -59,9 +59,6 @@ public class BookServiceImpl implements BookService{
             return modelMapper.map(bookRepository.save(modelMapper.map(dto,Book.class)),BookDto.class);
         }
         else throw new DataNotFoundException("BookDto");
-
-        //bookRepository.findById(dto.getBookId()).orElseThrow(()-> new DataNotFoundException("The LibraryUserDto is not found."));
-        /*return modelMapper.map(bookRepository.save(modelMapper.map(dto, Book.class)), BookDto.class);*/
     }
 
     @Override

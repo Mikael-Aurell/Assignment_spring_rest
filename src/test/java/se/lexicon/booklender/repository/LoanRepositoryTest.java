@@ -56,7 +56,7 @@ class LoanRepositoryTest {
         bookRepository.save(testBook);
 
         testLibraryUser = new LibraryUser();
-        testLibraryUser.setRegDate(LocalDate.of(1978, 04, 30));
+        testLibraryUser.setRegDate(LocalDate.of(1978, 4, 30));
         testLibraryUser.setName("Mikael Aurell");
         testLibraryUser.setEmail("aurell.mikael@gmail.com");
 
@@ -66,7 +66,7 @@ class LoanRepositoryTest {
         testObject.setBook(testBook);
         testObject.setLoanTaker(testLibraryUser);
         testObject.setTerminated(true);
-        testObject.setLoanDate(LocalDate.of(2021,04,22));
+        testObject.setLoanDate(LocalDate.of(2021,4,22));
 
         loanRepository.save(testObject);
     }
@@ -77,8 +77,9 @@ class LoanRepositoryTest {
         loanRepository.findAll().iterator().forEachRemaining(loanList::add);
         Long expectedId = loanList.get(0).getLoanId();
         Optional<Loan> actualId = loanRepository.findById(expectedId);
-
-        assertEquals(testLibraryUser.getName(), actualId.get().getLoanTaker().getName());
+        if(actualId.isPresent()) {
+            assertEquals(testLibraryUser.getName(), actualId.get().getLoanTaker().getName());
+        }
     }
 
     @Test

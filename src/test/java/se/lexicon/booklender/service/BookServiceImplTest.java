@@ -47,7 +47,7 @@ public class BookServiceImplTest {
     @DisplayName("Test_1: Find by Id")
     public void test_find_by_id(){
         try {
-            assertEquals(1,testObject.findById(testBookDto.getBookId()));
+            assertEquals(1,testObject.findById(testObject.findAll().get(0).getBookId()).getBookId());
         } catch (DataNotFoundException e) {
             e.printStackTrace();
         }
