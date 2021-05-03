@@ -13,7 +13,7 @@ public class LibraryUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private LocalDate regDate;
 
     @Column(nullable = true)

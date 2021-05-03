@@ -50,34 +50,26 @@ public class LibraryUserController {
     @Transactional
     @PostMapping("/")
     public ResponseEntity<LibraryUserDto> save(@RequestBody LibraryUserDto dto){
-        if(dto == null)
-            if (dto.getUserId() != 0) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if(dto == null) {
+            if (dto.getUserId() <= 0) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryUserService.create(dto));
     }
 
     @Transactional
     @PutMapping("/")
-    public ResponseEntity<LibraryUserDto> update(@RequestBody LibraryUserDto dto){
+    public ResponseEntity<LibraryUserDto> update(@RequestBody LibraryUserDto dto) throws DataNotFoundException {
         if(dto != null)
             if (dto.getUserId() < 1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        try {
+
             return ResponseEntity.status(HttpStatus.OK).body(libraryUserService.update(dto));
-        } catch (DataNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<LibraryUserDto> delete(@PathVariable("id")Integer id){
+    public ResponseEntity<LibraryUserDto> delete(@PathVariable("id")Integer id) throws DataNotFoundException {
         if (id < 1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        try {
             libraryUserService.delete(id); //delete returns void
             return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (DataNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
     }
 
 }

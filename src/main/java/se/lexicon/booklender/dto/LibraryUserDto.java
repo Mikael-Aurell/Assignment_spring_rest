@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 public class LibraryUserDto {
     private int userId;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    /*@JsonFormat(pattern = "yyyy-MM-dd")*/
     private LocalDate regDate;
     private String name;
     private String email;
