@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Data
 public class LoanDto {
     private long loanId;
-    private LibraryUserDto loanTakerDto;
-    private BookDto bookDto;
+    private LibraryUserDto loanTakerDto; //todo: change to loanTaker to fetch automatic from db
+    private BookDto bookDto; //todo: change to book to fetch automatic from db
     private LocalDate loanDate;
     private boolean terminated;
 }
