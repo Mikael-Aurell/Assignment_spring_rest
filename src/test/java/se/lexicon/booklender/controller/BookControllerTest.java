@@ -1,6 +1,5 @@
 package se.lexicon.booklender.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,44 +12,45 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import se.lexicon.booklender.dto.LibraryUserDto;
+import se.lexicon.booklender.dto.BookDto;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class LibraryUserControllerTest {
+public class BookControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    private LibraryUserDto libraryUserDto;
+    private BookDto bookDto;
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         objectMapper = new ObjectMapper();
 
-        libraryUserDto = new LibraryUserDto();
-        //libraryUserDto.setUserId(1);
-        libraryUserDto.setEmail("aurell.mikael@gmail.com");
-        libraryUserDto.setName("Mikael Aurell");
-        //libraryUserDto.setRegDate(LocalDate.of(2021,5,3));
+        bookDto = new BookDto();
+        bookDto.setTitle("How to Become a senor Java Fullstack Developer");
+        bookDto.setAvailable(true);
+        bookDto.setReserved(false);
+        bookDto.setMaxLoanDays(30);
+        bookDto.setFinePerDay(BigDecimal.valueOf(1 / 8));
+        bookDto.setDescription("Java");
     }
 
-    @DisplayName("Save LibraryUserDto")
+    @DisplayName("Save BookDto")
     @Test
-    public void save_library_user_dto() throws Exception {
-        String customerJsonMessage = objectMapper.writeValueAsString(libraryUserDto);
+    public void save_book_dto() throws Exception {
+        String customerJsonMessage = objectMapper.writeValueAsString(bookDto);
         System.out.println("customerJsonMessage = " + customerJsonMessage);
-        MvcResult mvcResult = mockMvc.perform(post("/api/v1/libraryUser/")
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/book/")
                 .content(customerJsonMessage)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
         ).andReturn();
         int status = mvcResult.getResponse().getStatus();
         Assertions.assertEquals(201,status);
     }
-
 }
