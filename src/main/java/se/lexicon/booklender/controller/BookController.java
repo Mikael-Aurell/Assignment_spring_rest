@@ -10,6 +10,7 @@ import se.lexicon.booklender.dto.LibraryUserDto;
 import se.lexicon.booklender.exception.DataNotFoundException;
 import se.lexicon.booklender.service.BookService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.web.cors.CorsConfiguration.ALL;
@@ -57,7 +58,7 @@ public class BookController {
 
     @Transactional
     @PostMapping("/")
-    public ResponseEntity<BookDto> save(@RequestBody BookDto dto){
+    public ResponseEntity<BookDto> save(@RequestBody @Valid BookDto dto){
         if(dto == null)
             if (dto.getBookId() <= 0) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(dto));

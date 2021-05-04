@@ -2,6 +2,7 @@ package se.lexicon.booklender.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -53,6 +55,7 @@ public class LoanControllerTest {
     @BeforeEach
     public void setup() throws Exception {
         objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
 
         bookDto = new BookDto();
         bookDto.setTitle("How to Become a senor Java Fullstack Developer");
@@ -93,7 +96,7 @@ public class LoanControllerTest {
         loanTakerDto_Id1.setUserId(1);
         testObject.setLoanTakerDto(loanTakerDto_Id1);
 
-        //testObject.setLoanDate(LocalDate.of(2021,4,22));
+        testObject.setLoanDate(LocalDate.of(2021,4,22));
         testObject.setTerminated(false);
     }
 
@@ -103,9 +106,13 @@ public class LoanControllerTest {
         String customerJsonMessage_LoanDto = objectMapper.writeValueAsString(testObject);
         System.out.println("customerJsonMessage_LoanDto = " + customerJsonMessage_LoanDto);
         MvcResult mvcResult_LoanDto = mockMvc.perform(post("/api/v1/loan/")
-        .content(customerJsonMessage_LoanDto)
+        .content("{\"loanTakerDto\": {\"userId\": 1},\n" +
+                "\"bookDto\": {\"bookId\": 1},\n" +
+                "\"loanDate\": null,\n" +
+                "\"terminated\": false }")
+                        //.content(customerJsonMessage_LoanDto)
         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-        ).andReturn();
+        ).andDo(print()).andReturn();
         int status = mvcResult_LoanDto.getResponse().getStatus();
         Assertions.assertEquals(201,status);
     }
