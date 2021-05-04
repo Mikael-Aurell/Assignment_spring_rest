@@ -1,6 +1,7 @@
 package se.lexicon.booklender.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class LoanController {
     @Transactional
     @PostMapping("/")
     public ResponseEntity<LoanDto> save(@RequestBody LoanDto dto){
-        return ResponseEntity.ok(loanService.create(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(loanService.create(dto));
     }
 
     @Transactional

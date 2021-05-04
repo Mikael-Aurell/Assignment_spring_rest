@@ -34,7 +34,6 @@ public class LibraryUserControllerTest {
         objectMapper = new ObjectMapper();
 
         libraryUserDto = new LibraryUserDto();
-        //libraryUserDto.setUserId(1);
         libraryUserDto.setEmail("aurell.mikael@gmail.com");
         libraryUserDto.setName("Mikael Aurell");
         //libraryUserDto.setRegDate(LocalDate.of(2021,5,3));
