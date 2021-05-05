@@ -66,7 +66,7 @@ public class LoanControllerTest {
         bookDto.setDescription("Java");
 
         //Save BookDto
-        String customerJsonMessage_BookDto = objectMapper.writeValueAsString(bookDto);
+        String customerJsonMessage_BookDto = objectMapper.writeValueAsString(bookDto); //Object to Json (Serialize)
         System.out.println("customerJsonMessage = " + customerJsonMessage_BookDto);
         MvcResult mvcResult_BookDto = mockMvc.perform(post("/api/v1/book/")
                 .content(customerJsonMessage_BookDto)

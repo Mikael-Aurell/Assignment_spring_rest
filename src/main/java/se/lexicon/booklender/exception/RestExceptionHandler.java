@@ -16,4 +16,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         apiError.setMessage(ex.getMessage());
         return ResponseEntity.ok(apiError);
     }
+
+
 }
