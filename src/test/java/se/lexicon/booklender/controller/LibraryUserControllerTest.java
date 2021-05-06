@@ -15,9 +15,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import se.lexicon.booklender.dto.LibraryUserDto;
 
-import java.time.LocalDate;
-
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -39,9 +41,9 @@ public class LibraryUserControllerTest {
         //libraryUserDto.setRegDate(LocalDate.of(2021,5,3));
     }
 
-    @DisplayName("Save LibraryUserDto")
+    @DisplayName("Save LibraryUser")
     @Test
-    public void save_library_user_dto() throws Exception {
+    public void save_library_user() throws Exception {
         String customerJsonMessage = objectMapper.writeValueAsString(libraryUserDto);
         System.out.println("customerJsonMessage = " + customerJsonMessage);
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/libraryUser/")
@@ -50,6 +52,77 @@ public class LibraryUserControllerTest {
         ).andReturn();
         int status = mvcResult.getResponse().getStatus();
         Assertions.assertEquals(201,status);
+    }
+
+    @DisplayName("Update LibraryUser")
+    @Test
+    public void update_library_user() throws Exception {
+        save_library_user();
+
+        mockMvc.perform(put("/api/v1/libraryUser/")
+        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        .content("{\n" +
+                "    \"userId\": 1,\n" +
+                "    \"name\": \"Mikael Aurell update\",\n" +
+                "    \"email\": \"aurell.mikael@gmail.com\"\n" +
+                "    }"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(get("/api/v1/libraryUser/")
+        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].name",is("Mikael Aurell update")))
+                .andDo(print())
+                .andReturn();
+    }
+
+
+    @DisplayName("Find LibraryUser by Id 1")
+    @Test
+    public void find_library_user_by_id_1() throws Exception {
+        save_library_user();
+        mockMvc.perform(get("/api/v1/libraryUser/1")
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        ).andExpect(
+                status().isOk())
+                .andReturn();
+    }
+
+    @DisplayName("Find All LibraryUser")
+    @Test
+    public void find_all_LibraryUser() throws Exception {
+        save_library_user();
+
+        mockMvc.
+                perform(
+                        get("/api/v1/libraryUser/")
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name", is("Mikael Aurell")))
+                .andReturn();
+    }
+
+    @DisplayName("Delete LibraryUser with Id 1")
+    @Test
+    public  void delete_libraryUser_with_Id_1() throws Exception {
+        save_library_user();
+
+        mockMvc.
+                perform(
+                        delete("/api/v1/libraryUser/1")
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.
+                perform(
+                        get("/api/v1/libraryUser/")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(0)))
+                .andReturn();
     }
 
 }

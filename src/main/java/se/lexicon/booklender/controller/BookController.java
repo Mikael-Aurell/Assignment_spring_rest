@@ -26,6 +26,11 @@ public class BookController {
         this.bookService = bookService;
     }
 
+    @GetMapping("/")
+    public ResponseEntity<List<BookDto>> findAll(){
+        return ResponseEntity.ok(bookService.findAll());
+    }
+
     @GetMapping("/find")
     public ResponseEntity<List<BookDto>> find(
             @RequestParam(name = "type", defaultValue = ALL)final String type,
@@ -37,9 +42,6 @@ public class BookController {
                 return ResponseEntity.ok(bookService.findByAvailable(Boolean.parseBoolean(value)));
             case "RESERVED":
                 return ResponseEntity.ok(bookService.findByReserved(Boolean.parseBoolean(value)));
-            case ALL:
-                if (bookService.findAll().isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-                return ResponseEntity.ok(bookService.findAll());
             default:
                 return ResponseEntity.badRequest().build();
         }
@@ -58,7 +60,7 @@ public class BookController {
 
     @Transactional
     @PostMapping("/")
-    public ResponseEntity<BookDto> save(@RequestBody @Valid BookDto dto){
+    public ResponseEntity<BookDto> save(@RequestBody BookDto dto){
         if(dto == null)
             if (dto.getBookId() <= 0) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(dto));

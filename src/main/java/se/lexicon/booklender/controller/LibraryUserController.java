@@ -25,9 +25,7 @@ public class LibraryUserController {
 
     @GetMapping("/")
     public ResponseEntity<List<LibraryUserDto>> findAll(){
-        if (libraryUserService.findAll().isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        else
-        return ResponseEntity.status(HttpStatus.FOUND).body(libraryUserService.findAll());
+        return ResponseEntity.status(HttpStatus.OK).body(libraryUserService.findAll());
     }
 
     @GetMapping("/{id}")

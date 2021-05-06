@@ -29,6 +29,12 @@ public class LoanController {
         return ResponseEntity.ok(loanService.findAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<LoanDto> findById(@PathVariable("id")Long id) throws DataNotFoundException {
+        if (id==null && id<1) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(loanService.findById(id));
+    }
+
     @GetMapping("/book/{id}")
     public ResponseEntity<List<LoanDto>> findByBookId(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(loanService.findByBookId(id));

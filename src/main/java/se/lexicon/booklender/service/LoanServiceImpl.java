@@ -70,8 +70,13 @@ public class LoanServiceImpl implements LoanService{
         if (dto == null) throw new IllegalArgumentException("The dto object not found");
         if (dto.getLoanId() < 1) throw new IllegalArgumentException("The BookDto is not valid");
 
-        return modelMapper.map(loanRepository.save(loanRepository.findById(modelMapper.map(dto,Loan.class).getLoanId())
+        LoanDto loanDto = modelMapper.map(loanRepository.save(loanRepository.findById(modelMapper.map(dto,Loan.class).getLoanId())
                 .orElseThrow(()-> new DataNotFoundException("LoanDto "))),LoanDto.class);
+
+        //Get the right loanTaker and book from id
+        loanDto.setLoanTakerDto(modelMapper.map(libraryUserRepository.findById(dto.getLoanTakerDto().getUserId()).get(), LibraryUserDto.class));
+        loanDto.setBookDto(modelMapper.map(bookRepository.findById(dto.getBookDto().getBookId()).get(), BookDto.class));
+        return loanDto;
     }
 
     @Override
