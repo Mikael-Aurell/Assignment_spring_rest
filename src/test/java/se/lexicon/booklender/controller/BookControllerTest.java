@@ -60,6 +60,8 @@ public class BookControllerTest {
         Assertions.assertEquals(201,status);
     }
 
+    //Normal Tests
+
     @DisplayName("Save BookDto")
     @Test
     public void save_book() throws Exception {
@@ -138,5 +140,33 @@ public class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$",hasSize(0)))
                 .andReturn();
+    }
+
+    //Validation Tests
+
+    @DisplayName("Save invalid fields to BookDto")
+    @Test
+    public void save_invalid_fields() throws Exception {
+        delete_book_with_Id_1();
+
+        objectMapper = new ObjectMapper();
+
+        BookDto bookDto2 = new BookDto();
+        bookDto2.setTitle("A");
+        bookDto2.setAvailable(true);
+        bookDto2.setReserved(false);
+        bookDto2.setMaxLoanDays(30);
+        bookDto2.setFinePerDay(BigDecimal.valueOf(1 / 8));
+        bookDto2.setDescription("Java");
+
+        String customerJsonMessage = objectMapper.writeValueAsString(bookDto2);
+        System.out.println("customerJsonMessage = " + customerJsonMessage);
+        MvcResult mvcResult = mockMvc.perform(post(url)
+                .content(customerJsonMessage)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        ).andReturn();
+        int actual = mvcResult.getResponse().getStatus();
+        Assertions.assertEquals(400, actual);
+
     }
 }

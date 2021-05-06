@@ -60,7 +60,7 @@ public class BookController {
 
     @Transactional
     @PostMapping("/")
-    public ResponseEntity<BookDto> save(@RequestBody BookDto dto){
+    public ResponseEntity<BookDto> save(@RequestBody @Valid BookDto dto){
         if(dto == null)
             if (dto.getBookId() <= 0) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.create(dto));
@@ -68,7 +68,7 @@ public class BookController {
 
     @Transactional
     @PutMapping("/")
-    public ResponseEntity<BookDto> update(@RequestBody BookDto dto){
+    public ResponseEntity<BookDto> update(@RequestBody @Valid BookDto dto){
         if(dto != null)
             if (dto.getBookId() < 1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         try {

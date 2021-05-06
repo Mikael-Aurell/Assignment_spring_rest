@@ -9,6 +9,7 @@ import se.lexicon.booklender.dto.LoanDto;
 import se.lexicon.booklender.exception.DataNotFoundException;
 import se.lexicon.booklender.service.LoanService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.web.cors.CorsConfiguration.ALL;
@@ -47,13 +48,13 @@ public class LoanController {
 
     @Transactional
     @PostMapping("/")
-    public ResponseEntity<LoanDto> save(@RequestBody LoanDto dto){
+    public ResponseEntity<LoanDto> save(@RequestBody @Valid LoanDto dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(loanService.create(dto));
     }
 
     @Transactional
     @PutMapping("/")
-    public ResponseEntity<LoanDto> update(@RequestBody LoanDto dto) throws DataNotFoundException {
+    public ResponseEntity<LoanDto> update(@RequestBody @Valid LoanDto dto) throws DataNotFoundException {
         return ResponseEntity.ok(loanService.update(dto));
     }
 

@@ -9,6 +9,7 @@ import se.lexicon.booklender.dto.LibraryUserDto;
 import se.lexicon.booklender.exception.DataNotFoundException;
 import se.lexicon.booklender.service.LibraryUserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -47,7 +48,7 @@ public class LibraryUserController {
 
     @Transactional
     @PostMapping("/")
-    public ResponseEntity<LibraryUserDto> save(@RequestBody LibraryUserDto dto){
+    public ResponseEntity<LibraryUserDto> save(@RequestBody @Valid LibraryUserDto dto){
         if(dto == null) {
             if (dto.getUserId() <= 0) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -56,7 +57,7 @@ public class LibraryUserController {
 
     @Transactional
     @PutMapping("/")
-    public ResponseEntity<LibraryUserDto> update(@RequestBody LibraryUserDto dto) throws DataNotFoundException {
+    public ResponseEntity<LibraryUserDto> update(@RequestBody @Valid LibraryUserDto dto) throws DataNotFoundException {
         if(dto != null)
             if (dto.getUserId() < 1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
